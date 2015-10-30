@@ -1,0 +1,32 @@
+[user]
+  name = Chris Tessmer
+  email = chris.tessmer@onyxpoint.com
+[color]
+  ui = true
+[alias]
+  # colorful log with one-line entries
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+  # colorful log with a summary of updated files
+	lgf = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --name-only
+
+  # colorful log with a summary of updated files & the commit message
+  lgff = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\n\n%b' --abbrev-commit --name-only
+
+  # commit history fun (source: przemoc/dotfiles)
+  cad    = !"f() { ADATE=\"$(git log -1 --pretty=format:'%ai')\"; GIT_COMMITTER_DATE=\"$ADATE\" git commit --amend \"$@\"; }; f"
+  cadc   = !"f() { CDATE=\"$(git log -1 --pretty=format:'%ci')\"; GIT_COMMITTER_DATE=\"$CDATE\" git commit --amend --date=\"$CDATE\" \"$@\"; }; f"
+# 
+  cadn   = !"f() { NDATE=\"$(date -R -d \"$*\")\"; GIT_COMMITTER_DATE=\"$NDATE\" git commit --amend --date=\"$NDATE\"; }; f"
+  cadna  = !"f() { NDATE=\"$(date -R -d \"$*\")\"; CDATE=\"$(git log -1 --pretty=format:'%ci')\"; GIT_COMMITTER_DATE=\"$CDATE\" git commit --amend --date=\"$NDATE\"; }; f"
+  cadnc  = !"f() { NDATE=\"$(date -R -d \"$*\")\"; GIT_COMMITTER_DATE=\"$NDATE\" git commit --amend; }; f"
+
+[push]
+	default = simple
+[core]
+	editor = vim
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
+	prompt = false
