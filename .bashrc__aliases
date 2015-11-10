@@ -1,0 +1,139 @@
+## export GREP_OPTIONS=--color=auto # GREP_OPTIONS is deprecated in fc22+
+
+unset GOROOT
+export GOPATH=$HOME/gocode
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$HOME/bin/nodejs/bin
+#export PATH=$PATH:$HOME/bin/hugo
+
+
+export TERM=xterm-256color       # tmux/vim play nicer with 256 colors
+
+# prevents infinite garbage loops within SIMP codebase
+alias igrep='igrep -I -r --exclude-dir=fixtures --exclude-dir=.git'
+
+export op_ct="$HOME/src/_simp/op-ct"
+export wps="$HOME/Documents/PuppetLabs/PuppetLabs_Consulting/customers/WPS_Insurance"
+alias wps="cd ${wps}"
+alias opct="cd ${op_ct}"
+alias op-ct="cd ${op_ct}"
+
+# ssh vars and aliases
+# -----------------------------------------------------------------------------
+# see .ssh/config for details
+alias kwu="ssh kwu"
+alias kw0="ssh kw0"
+alias kw2="ssh kw2"
+alias kw3="ssh kw3"
+alias kw4="ssh kw4"
+
+# proxies
+alias kwup="ssh kwup"
+alias kw0p="ssh kw0p"
+alias kw2p="ssh kw2p"
+alias kw3p="ssh kw3p"
+alias kw4p="ssh kw4p"
+
+# themed gnome-terminals + connections
+# -----------------------------------------------------------------------------
+# proxies
+alias gkw3p="gnome-terminal --profile=dark-red -e 'ssh kw3p'"
+alias gkwu="gnome-terminal  --profile=dark-red -e 'ssh kwup'"
+
+# upstairs windows
+alias tbpuppet="gnome-terminal  --profile=green -e 'ssh tbpuppet'"
+alias tbblade02="gnome-terminal --profile=blue  -e 'ssh blade02'"
+alias tbblade03="gnome-terminal --profile=blue2 -e 'ssh blade03'"
+alias tbblade04="gnome-terminal --profile=blue  -e 'ssh blade04'"
+alias tbblade05="gnome-terminal --profile=blue  -e 'ssh blade05'"
+alias tbblade06="gnome-terminal --profile=blue  -e 'ssh blade06'"
+alias tbblade07="gnome-terminal --profile=blue  -e 'ssh blade07'"
+
+alias tbb2=tbblade02
+alias tbb3=tbblade03
+alias tbb4=tbblade04
+alias tbb5=tbblade05
+alias tbb6=tbblade06
+alias tbb7=tbblade07
+
+# timekeeping helpers
+# -----------------------------------------------------------------------------
+now()
+{
+  echo "$(date +%H) + (($(date +%M)*.16) *.1 )" | bc
+}
+
+login()
+{
+   time=$(w | grep tty | awk '{print $4}' | sed -e 's/[a-z]\+//i')
+   min=$(echo $time| awk -F: '{print $2}')
+   hour=$(echo $time| awk -F: '{print $1}')
+  [ "$#" -gt 0 ] && [ $1 == '-v' ] && echo -n "${hour}:${min} = "
+   echo "${hour} + ((${min}*.16)*.1)" | bc
+}
+
+t()
+{
+  [ "$#" -gt 0 ] && [ $1 == '-v' ] && echo -n "$(now)-$(login) = "
+  echo $(now)-$(login) | bc
+}
+
+# git aliases
+alias gl='git lg'
+alias glf='git lgf'
+alias gsu='git status -uno'
+# -----------------------------------------------------------------------------
+# convenience functions stolen from Nick, stolen from Dan H
+# Change directory to local #.0.X git repository.
+# -----------------------------------------------------------------------------
+### function gitdir() {
+###   simp=$1
+###   sub=$2
+###   simp="${simp}.X"
+###   sdir="/srv/Local_Build/${simp}"; cd ${sdir}
+###   sdir="${sdir}/SIMP"
+###   if [ -d ${sdir} ]; then cd $sdir; fi
+###   case $sub in
+###    "b") if [ -d ${sdir}/build ]; then cd $sdir/build; fi;;
+###    "d") if [ -d ${sdir}/src/doc ]; then cd $sdir/src/doc; fi;;
+###    "m") if [ -d ${sdir}/src/puppet/modules ]; then cd $sdir/src/puppet/modules; fi;;
+###    "d") if [ -d ${sdir}/src/doc ]; then cd $sdir/src/doc; fi;;
+###    "r") if [ -d ${sdir}/src/rsync ]; then cd $sdir/src/rsync; fi;;
+###   esac
+###   pwd
+### }
+###
+### alias g41='gitdir 4.1'
+### alias g41b='gitdir 4.1 b'
+### alias g41m='gitdir 4.1 m'
+### alias g41r='gitdir 4.1 r'
+### alias g41d='gitdir 4.1 d'
+### alias g40='gitdir 4.0'
+### alias g40b='gitdir 4.0 b'
+### alias g40m='gitdir 4.0 m'
+### alias g40r='gitdir 4.0 r'
+### alias g40d='gitdir 4.0 d'
+### alias g50='gitdir 5.0'
+### alias g50b='gitdir 5.0 b'
+### alias g50m='gitdir 5.0 m'
+### alias g50r='gitdir 5.0 r'
+### alias g50d='gitdir 5.0 d'
+
+function add_gerrit() {
+  repo=$1
+
+  if [ -z $repo ]; then
+    echo "Need to pass a repo as the first argument"
+    return 1;
+  fi
+
+  git remote add gerrit "ssh://op-ct@review.gerrithub.io:29418/simp/$repo"
+}
+
+function _update_ps1() {
+   PS1="$(~/bin/powerline-shell.py $? 2> /dev/null)"
+}
+
+if [ "$TERM" != "linux" ]; then
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi

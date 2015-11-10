@@ -16,10 +16,23 @@
   # commit history fun (source: przemoc/dotfiles)
   cad    = !"f() { ADATE=\"$(git log -1 --pretty=format:'%ai')\"; GIT_COMMITTER_DATE=\"$ADATE\" git commit --amend \"$@\"; }; f"
   cadc   = !"f() { CDATE=\"$(git log -1 --pretty=format:'%ci')\"; GIT_COMMITTER_DATE=\"$CDATE\" git commit --amend --date=\"$CDATE\" \"$@\"; }; f"
-# 
   cadn   = !"f() { NDATE=\"$(date -R -d \"$*\")\"; GIT_COMMITTER_DATE=\"$NDATE\" git commit --amend --date=\"$NDATE\"; }; f"
   cadna  = !"f() { NDATE=\"$(date -R -d \"$*\")\"; CDATE=\"$(git log -1 --pretty=format:'%ci')\"; GIT_COMMITTER_DATE=\"$CDATE\" git commit --amend --date=\"$NDATE\"; }; f"
   cadnc  = !"f() { NDATE=\"$(date -R -d \"$*\")\"; GIT_COMMITTER_DATE=\"$NDATE\" git commit --amend; }; f"
+
+  # Gerrit 
+  r  = review -l
+  rd = review -d
+  s = status --ignore-submodules -sb
+  ss = status -sb
+  wipe = reset --hard
+
+  # 
+  ls-del = ls-files -d
+  ls-mod = ls-files -m
+  ls-new = ls-files --exclude-standard -o
+  ls-ign = ls-files --exclude-standard -o -i
+
 
 [push]
 	default = simple
